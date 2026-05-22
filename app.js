@@ -63,8 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
   updateStatus();
   renderCountdown();
   setInterval(renderCountdown, 60000);
-  window.addEventListener("resize", () => setTimeout(drawBracketLines, 60));
-  window.addEventListener("load", () => setTimeout(drawBracketLines, 150));
 });
 
 
@@ -77,7 +75,6 @@ function activateTab(tab){
   if (tab === "mando") renderCommandCenter();
   if (tab === "impacto") renderLiveImpact();
   if (tab === "predicciones") renderFriendsPredictions();
-  if (tab === "prediccion") setTimeout(drawBracketLines, 80);
 }
 
 function renderCountdown(){
@@ -1239,8 +1236,7 @@ function renderBracket(){
   const tree = document.getElementById("knockoutTree");
   if (!tree) return;
   tree.innerHTML = `
-    <div id="bracketArena" class="bracket-arena v20-bracket">
-      <svg id="bracketLines" class="bracket-lines" aria-hidden="true"></svg>
+    <div id="bracketArena" class="bracket-arena v22-bracket no-svg-lines">
       <div class="bracket-side bracket-left">
         ${renderRoundByIds("r32", BRACKET_VISUAL_LAYOUT.left.r32, false, "left")}
         ${renderRoundByIds("r16", BRACKET_VISUAL_LAYOUT.left.r16, false, "left")}
@@ -1271,7 +1267,8 @@ function renderBracket(){
     </div>`;
   document.querySelectorAll(".team-pick:not(.third-pick)").forEach(btn => btn.addEventListener("click", () => selectWinner(btn.dataset.round, Number(btn.dataset.match), btn.dataset.team)));
   document.querySelectorAll(".third-pick").forEach(btn => btn.addEventListener("click", () => selectThirdPlace(btn.dataset.team)));
-  setTimeout(drawBracketLines, 40);
+  // v22: las líneas SVG se desactivan para evitar que se pinten fuera del bracket en GitHub Pages.
+  clearBracketLines();
 }
 
 function renderRoundByIds(round, matchIds, compact=false, side="left"){
@@ -1302,67 +1299,17 @@ function bracketTeam(round, matchIndex, team){
 }
 
 function drawBracketLines(){
-  const arena = document.getElementById("bracketArena");
-  const svg = document.getElementById("bracketLines");
-  if (!arena || !svg) return;
-  const rect = arena.getBoundingClientRect();
-  const w = Math.max(arena.scrollWidth, rect.width), h = Math.max(arena.scrollHeight, rect.height);
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.setAttribute("width", w);
-  svg.setAttribute("height", h);
-  svg.innerHTML = "";
+  // v22: desactivado. Las líneas SVG causaban artefactos fuera del cuadro en GitHub Pages.
+  clearBracketLines();
+}
 
-  const make = (d, extra="") => {
-    const p=document.createElementNS("http://www.w3.org/2000/svg","path");
-    p.setAttribute("d",d);
-    p.setAttribute("class",`bracket-line-path official ${extra}`.trim());
-    svg.appendChild(p);
-  };
-  const matchById = (id) => arena.querySelector(`.bracket-match[data-match-id="${id}"]`);
-  const finalMatch = matchById(104);
-  const relativeBox = (el, ancestor) => {
-    let left = 0, top = 0, node = el;
-    while (node && node !== ancestor) {
-      left += node.offsetLeft || 0;
-      top += node.offsetTop || 0;
-      node = node.offsetParent;
-    }
-    return { left, top, width: el.offsetWidth || el.clientWidth || 0, height: el.offsetHeight || el.clientHeight || 0 };
-  };
-  const point = (el, side, target=false) => {
-    const r = relativeBox(el, arena);
-    const left = r.left, right = r.left + r.width, y = r.top + r.height / 2;
-    if (side==="left") return {x: target?left:right, y};
-    if (side==="right") return {x: target?right:left, y};
-    return {x:left+r.width/2,y};
-  };
-  const drawPairToTarget = (fromId1, fromId2, targetId) => {
-    const target = matchById(targetId), from1 = matchById(fromId1), from2 = matchById(fromId2);
-    if (!target || !from1 || !from2) return;
-    const side = target.dataset.side || "left";
-    const a=point(from1,side,false), b=point(from2,side,false), c=point(target,side,true);
-    const trunk = side==="left" ? Math.min(c.x-30, Math.max(a.x,b.x)+34) : Math.max(c.x+30, Math.min(a.x,b.x)-34);
-    make(`M ${a.x} ${a.y} H ${trunk} V ${b.y} H ${b.x}`);
-    make(`M ${trunk} ${(a.y+b.y)/2} H ${c.x}`);
-  };
-
-  ["r16","qf","sf"].forEach(round => {
-    (window.KNOCKOUT_SLOTS?.[round] || []).forEach(slot => {
-      if (slot.from?.length === 2) drawPairToTarget(slot.from[0], slot.from[1], slot.id);
-    });
+function clearBracketLines(){
+  document.querySelectorAll(".bracket-lines").forEach(svg => {
+    svg.innerHTML = "";
+    svg.setAttribute("width", "0");
+    svg.setAttribute("height", "0");
+    svg.style.display = "none";
   });
-
-  const sfLeft = matchById(101), sfRight = matchById(102);
-  if (sfLeft && finalMatch) {
-    const a=point(sfLeft,"left",false), c=point(finalMatch,"left",true);
-    const mid=a.x+46;
-    make(`M ${a.x} ${a.y} H ${mid} V ${c.y} H ${c.x}`, "final-link");
-  }
-  if (sfRight && finalMatch) {
-    const a=point(sfRight,"right",false), c=point(finalMatch,"right",true);
-    const mid=a.x-46;
-    make(`M ${a.x} ${a.y} H ${mid} V ${c.y} H ${c.x}`, "final-link");
-  }
 }
 
 function selectWinner(round, matchIndex, team){

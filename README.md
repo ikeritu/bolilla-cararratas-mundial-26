@@ -198,5 +198,6 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - El texto de la pestaña se actualiza para dejar claro que no hay chuleta hasta que cierre la bolilla.
 
 
-## v21
-- Corregida la posición de las líneas del knockout al publicar en GitHub Pages.
+## v22
+- Corregido el artefacto visual de las líneas del knockout en GitHub Pages desactivando el SVG de conexión que se pintaba fuera del cuadro.
+- El bracket mantiene la estructura y avance oficial por IDs de partido; solo se retira el dibujo de líneas hasta implementar una versión SVG 100% encapsulada.

@@ -648,7 +648,42 @@ body.admin-page .save-row{display:flex;gap:10px;align-items:center;flex-wrap:wra
   .bracket-line-path.official.final-link{stroke-width:3;}
 }
 
-/* v21: fijar líneas del knockout dentro de su contenedor al publicar */
-#bracketArena{position:relative; overflow:hidden; isolation:isolate;}
-#bracketLines{position:absolute; inset:0; width:100%; height:100%; overflow:hidden !important; z-index:1;}
-#knockoutTree, .bracket-scroll, .bracket-stadium{overflow:visible;}
+/* v22: corrección definitiva del artefacto de líneas del knockout en GitHub Pages.
+   Se desactiva el SVG de conexión para que no se pinte fuera del cuadro. */
+.bracket-lines,
+#bracketLines,
+svg.bracket-lines {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.v22-bracket,
+.no-svg-lines {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.v22-bracket .bracket-side,
+.v22-bracket .bracket-center,
+.v22-bracket .bracket-round,
+.v22-bracket .bracket-match,
+.v22-bracket .team-pick,
+.v22-bracket .winner-panel,
+.v22-bracket .third-panel {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Evita que cualquier pseudo-línea antigua vuelva a aparecer fuera de sitio */
+.v22-bracket .bracket-match::before,
+.v22-bracket .bracket-match::after,
+.v22-bracket .bracket-round::before,
+.v22-bracket .bracket-round::after,
+.v22-bracket .bracket-center::before,
+.v22-bracket .bracket-center::after {
+  display: none !important;
+  content: none !important;
+}
