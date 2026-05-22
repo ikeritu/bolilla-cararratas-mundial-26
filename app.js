@@ -1055,16 +1055,139 @@ function renderImpactResult(){
 function randomRatPrediction(){
   const mode=prompt("Modo rata: conservador, caos o rata", "conservador");
   if(!mode) return;
+
+  const isChaos = /caos/i.test(mode);
+  const isRat = /rata/i.test(mode);
+
   WC_DATA.matches.forEach(m=>{
     const favoriteBias = groupTeamOrder(m.home) <= groupTeamOrder(m.away) ? 1 : -1;
     let h=0,a=0;
-    if(/caos/i.test(mode)){ h=Math.floor(Math.random()*5); a=Math.floor(Math.random()*5); }
-    else if(/rata/i.test(mode)){ h=Math.floor(Math.random()*4); a=Math.floor(Math.random()*4); if(Math.random()<0.18){ h= Math.floor(Math.random()*7); a=Math.floor(Math.random()*2); } }
-    else { h=Math.floor(Math.random()*3)+(favoriteBias>0?1:0); a=Math.floor(Math.random()*3)+(favoriteBias<0?1:0); }
+    if(isChaos){
+      h=Math.floor(Math.random()*5);
+      a=Math.floor(Math.random()*5);
+    } else if(isRat){
+      h=Math.floor(Math.random()*4);
+      a=Math.floor(Math.random()*4);
+      if(Math.random()<0.18){
+        h= Math.floor(Math.random()*7);
+        a=Math.floor(Math.random()*2);
+      }
+    } else {
+      h=Math.floor(Math.random()*3)+(favoriteBias>0?1:0);
+      a=Math.floor(Math.random()*3)+(favoriteBias<0?1:0);
+    }
     state.scores[m.id]={home:h,away:a};
   });
-  restoreVisibleScores(); renderGroupCards(); renderActiveStandings(); syncBracketWithGroups(); renderBracket(); renderProgressDashboard(); renderMySummary(); saveDraftLocal(true);
-  toast("Rata aleatoria activada. Revisa antes de enviar, que luego vienen los lloros.", "warn");
+
+  restoreVisibleScores();
+  syncBracketWithGroups();
+  randomCompleteKnockout(mode);
+  randomCompleteAwardsAndXI(mode);
+
+  renderGroupCards();
+  renderActiveStandings();
+  renderBracket();
+  renderProgressDashboard();
+  renderMySummary();
+  saveDraftLocal(true);
+  toast("Rata aleatoria completa activada. Te ha rellenado hasta el último drama; revisa antes de enviar, que luego vienen los lloros.", "warn");
+}
+
+function randomCompleteKnockout(mode="conservador"){
+  const pickWinner = (teamA, teamB) => {
+    if(!teamA) return teamB || "";
+    if(!teamB) return teamA || "";
+
+    const rankA = globalTeamStrength(teamA);
+    const rankB = globalTeamStrength(teamB);
+    const fav = rankA <= rankB ? teamA : teamB;
+    const dog = fav === teamA ? teamB : teamA;
+
+    if(/caos/i.test(mode)) return Math.random() < 0.50 ? teamA : teamB;
+    if(/rata/i.test(mode)) return Math.random() < 0.35 ? dog : fav;
+    return Math.random() < 0.78 ? fav : dog;
+  };
+
+  const fillNextRound = (fromRound, toRound) => {
+    const fromSlots = window.KNOCKOUT_SLOTS?.[fromRound] || [];
+    const toSlots = window.KNOCKOUT_SLOTS?.[toRound] || [];
+    const source = fromRound === "r32" ? (state.knockout.r32 || []) : (state.knockout[fromRound] || []);
+    state.knockout[toRound] = [];
+
+    toSlots.forEach((slot, targetMatchIndex) => {
+      (slot.from || []).forEach((sourceMatchId, pos) => {
+        const sourceMatchIndex = fromSlots.findIndex(s => Number(s.id) === Number(sourceMatchId));
+        if(sourceMatchIndex < 0) return;
+        const a = source[sourceMatchIndex*2] || "";
+        const b = source[sourceMatchIndex*2+1] || "";
+        state.knockout[toRound][targetMatchIndex*2 + pos] = pickWinner(a,b);
+      });
+    });
+  };
+
+  fillNextRound("r32", "r16");
+  fillNextRound("r16", "qf");
+  fillNextRound("qf", "sf");
+  fillNextRound("sf", "final");
+
+  const finalists = state.knockout.final || [];
+  const champion = pickWinner(finalists[0], finalists[1]);
+  state.knockout.champion = champion ? [champion] : [];
+
+  const semiTeams = (state.knockout.sf || []).filter(Boolean);
+  const finalistSet = new Set(finalists.filter(Boolean));
+  const thirdCandidates = semiTeams.filter(t => !finalistSet.has(t));
+  const third = pickWinner(thirdCandidates[0], thirdCandidates[1]) || thirdCandidates[0] || "";
+  state.knockout.third = third ? [third] : [];
+}
+
+function globalTeamStrength(team){
+  const power = {
+    "Brazil":1, "France":2, "Argentina":3, "Spain":4, "England":5, "Portugal":6,
+    "Germany":7, "Netherlands":8, "Belgium":9, "Croatia":10, "Uruguay":11,
+    "Morocco":12, "United States":13, "Mexico":14, "Colombia":15, "Japan":16,
+    "Switzerland":17, "Senegal":18, "Australia":19, "Korea Republic":20,
+    "Türkiye":21, "Côte d’Ivoire":22, "Ecuador":23, "Paraguay":24, "Norway":25,
+    "Canada":26, "Egypt":27, "Iran":28, "Algeria":29, "Ghana":30,
+    "Czechia":31, "Austria":32, "Scotland":33, "Sweden":34, "Saudi Arabia":35,
+    "South Africa":36, "Tunisia":37, "Qatar":38, "New Zealand":39, "Cabo Verde":40,
+    "Haiti":41, "Panama":42, "Jordan":43, "Uzbekistan":44, "Bosnia and Herzegovina":45,
+    "Curaçao":46, "Iraq":47, "Congo DR":48
+  };
+  return power[team] || 99;
+}
+
+function randomCompleteAwardsAndXI(mode="conservador"){
+  const topPlayers = [
+    "Kylian Mbappé", "Lionel Messi", "Lamine Yamal", "Vinícius Jr.", "Harry Kane",
+    "Erling Haaland", "Jude Bellingham", "Pedri", "Rodri", "Jamal Musiala",
+    "Phil Foden", "Bukayo Saka", "Lautaro Martínez", "Raphinha", "Bruno Fernandes"
+  ];
+  const keepers = ["Unai Simón", "Emiliano Martínez", "Mike Maignan", "Alisson", "Manuel Neuer", "Diogo Costa"];
+  const young = ["Lamine Yamal", "Endrick", "Gavi", "Warren Zaïre-Emery", "Arda Güler", "Alejandro Garnacho"];
+  const xi = [
+    "Unai Simón",
+    "Achraf Hakimi", "William Saliba", "Rúben Dias", "Theo Hernández",
+    "Rodri", "Jude Bellingham", "Pedri",
+    "Lamine Yamal", "Kylian Mbappé", "Vinícius Jr."
+  ];
+  const shuffle = arr => [...arr].sort(()=>Math.random()-0.5);
+  const set = (name, value) => {
+    const el = document.querySelector(`[name="${CSS.escape(name)}"]`);
+    if(el) el.value = value;
+  };
+
+  const boot = shuffle(topPlayers).slice(0,3);
+  const ball = shuffle(topPlayers).slice(0,3);
+  const glove = shuffle(keepers).slice(0,3);
+  const bestYoung = shuffle(young).slice(0,3);
+  const bestXI = /caos|rata/i.test(mode) ? shuffle([...xi, ...topPlayers, ...keepers]).slice(0,11) : xi;
+
+  boot.forEach((v,i)=>set(`goldenBoot${i+1}`, v));
+  ball.forEach((v,i)=>set(`goldenBall${i+1}`, v));
+  glove.forEach((v,i)=>set(`goldenGlove${i+1}`, v));
+  bestYoung.forEach((v,i)=>set(`bestYoung${i+1}`, v));
+  bestXI.forEach((v,i)=>set(`bestXI_${i+1}`, v));
 }
 
 

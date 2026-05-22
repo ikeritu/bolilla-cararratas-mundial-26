@@ -212,3 +212,8 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v25
 - Configurado `API_URL` con el despliegue real de Google Apps Script.
 - Añadido cache-busting a `config.js`, `app.js`, `admin.js`, `worldcup2026.js` y `style.css` para evitar que GitHub Pages o el navegador carguen versiones antiguas.
+
+
+## v26
+- Mejorado el botón de Rata aleatoria: ahora completa fase de grupos, eliminatorias, campeón, tercer puesto, premios y 11 ideal.
+- Añadido cache-busting nuevo para evitar que GitHub Pages cargue `app.js` antiguo.
