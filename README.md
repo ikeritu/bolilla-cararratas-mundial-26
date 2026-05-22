@@ -234,3 +234,8 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - Corrección definitiva del botón “Volver a editar” en el modal de revisión.
 - El botón ahora lleva clase propia y estilo inline para evitar conflictos o caché de CSS.
 - Añadido cache-busting nuevo para forzar carga de `app.js` y `style.css`.
+
+
+## v30
+- Corregido el botón “Copiar mi predicción para WhatsApp”, que podía quedar invisible por estilos heredados.
+- Se añade clase propia, estilo visible y cache-busting nuevo.
