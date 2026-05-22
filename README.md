@@ -223,3 +223,8 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - Corregida de raíz la función de Rata aleatoria completa.
 - Ahora las eliminatorias se simulan por IDs oficiales de partido, no por render ni por clicks visuales.
 - El botón se renombra como “Rata aleatoria completa” para confirmar que el navegador carga la versión correcta.
+
+
+## v28
+- Corregido el botón “Volver a editar” del modal de revisión final, que quedaba blanco sobre fondo claro y no se veía.
+- Añadido cache-busting nuevo para `style.css` y scripts.

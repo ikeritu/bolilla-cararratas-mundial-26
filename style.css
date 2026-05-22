@@ -742,3 +742,37 @@ svg.bracket-lines {
   overflow: visible !important;
   isolation: isolate !important;
 }
+
+
+/* v28: botón Volver a editar visible en el modal de revisión */
+.review-actions,
+.modal-actions {
+  display: flex !important;
+  gap: 14px !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  margin-top: 22px !important;
+}
+
+.review-cancel-btn,
+#reviewModal .button.secondary,
+#reviewModal button.secondary {
+  background: #ffffff !important;
+  color: #12301d !important;
+  border: 2px solid #2ea043 !important;
+  box-shadow: 0 8px 18px rgba(31,122,53,.12) !important;
+  opacity: 1 !important;
+  min-width: 190px !important;
+}
+
+.review-cancel-btn:hover,
+#reviewModal .button.secondary:hover,
+#reviewModal button.secondary:hover {
+  background: #f0fbef !important;
+  color: #0b5f27 !important;
+}
+
+#reviewModal .button:not(.secondary) {
+  color: #ffffff !important;
+}
