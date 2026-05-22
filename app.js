@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
   updateStatus();
   renderCountdown();
   setInterval(renderCountdown, 60000);
+  window.addEventListener("resize", () => setTimeout(drawBracketLines, 60));
+  window.addEventListener("load", () => setTimeout(drawBracketLines, 150));
 });
 
 
@@ -75,6 +77,7 @@ function activateTab(tab){
   if (tab === "mando") renderCommandCenter();
   if (tab === "impacto") renderLiveImpact();
   if (tab === "predicciones") renderFriendsPredictions();
+  if (tab === "prediccion") setTimeout(drawBracketLines, 80);
 }
 
 function renderCountdown(){
@@ -1317,9 +1320,18 @@ function drawBracketLines(){
   };
   const matchById = (id) => arena.querySelector(`.bracket-match[data-match-id="${id}"]`);
   const finalMatch = matchById(104);
+  const relativeBox = (el, ancestor) => {
+    let left = 0, top = 0, node = el;
+    while (node && node !== ancestor) {
+      left += node.offsetLeft || 0;
+      top += node.offsetTop || 0;
+      node = node.offsetParent;
+    }
+    return { left, top, width: el.offsetWidth || el.clientWidth || 0, height: el.offsetHeight || el.clientHeight || 0 };
+  };
   const point = (el, side, target=false) => {
-    const r=el.getBoundingClientRect();
-    const left=r.left-rect.left, right=r.right-rect.left, y=r.top-rect.top+r.height/2;
+    const r = relativeBox(el, arena);
+    const left = r.left, right = r.left + r.width, y = r.top + r.height / 2;
     if (side==="left") return {x: target?left:right, y};
     if (side==="right") return {x: target?right:left, y};
     return {x:left+r.width/2,y};

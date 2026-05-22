@@ -54,7 +54,7 @@ file:///C:/Users/ikeri/proyectos/bolilla-cararratas-mundial-26/admin.html
 La clave admin local es:
 
 ```text
-XXXX
+2226
 ```
 
 ## Funcionamiento para jugadores
@@ -196,3 +196,7 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - La pestaña **Predicciones de los amigos** queda bloqueada hasta el cierre oficial, aunque el jugador ya haya guardado su propia porra.
 - Se elimina la comparativa incrustada dentro de esa pestaña para evitar filtraciones antes del cierre.
 - El texto de la pestaña se actualiza para dejar claro que no hay chuleta hasta que cierre la bolilla.
+
+
+## v21
+- Corregida la posición de las líneas del knockout al publicar en GitHub Pages.

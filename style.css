@@ -647,3 +647,8 @@ body.admin-page .save-row{display:flex;gap:10px;align-items:center;flex-wrap:wra
   .bracket-line-path.official{stroke-width:2.4;}
   .bracket-line-path.official.final-link{stroke-width:3;}
 }
+
+/* v21: fijar líneas del knockout dentro de su contenedor al publicar */
+#bracketArena{position:relative; overflow:hidden; isolation:isolate;}
+#bracketLines{position:absolute; inset:0; width:100%; height:100%; overflow:hidden !important; z-index:1;}
+#knockoutTree, .bracket-scroll, .bracket-stadium{overflow:visible;}
