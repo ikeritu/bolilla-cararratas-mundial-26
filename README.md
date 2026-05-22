@@ -54,7 +54,7 @@ file:///C:/Users/ikeri/proyectos/bolilla-cararratas-mundial-26/admin.html
 La clave admin local es:
 
 ```text
-2226
+XXXX
 ```
 
 ## Funcionamiento para jugadores
