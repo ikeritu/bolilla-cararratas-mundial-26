@@ -239,3 +239,8 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v30
 - Corregido el botón “Copiar mi predicción para WhatsApp”, que podía quedar invisible por estilos heredados.
 - Se añade clase propia, estilo visible y cache-busting nuevo.
+
+
+## v31
+- Corregido error del panel admin: `escapeAttr is not defined`.
+- Añadida función `escapeAttr()` en `admin.js` y cache-busting nuevo.

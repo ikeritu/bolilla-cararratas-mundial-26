@@ -318,6 +318,14 @@ async function api(action, payload={}){
   if (!data.ok) throw new Error(data.error || "Error desconocido");
   return data;
 }
+function escapeAttr(s){
+  return String(s ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
 function compareTeamsAdmin(a,b){
   const base = (b.pts-a.pts) || (b.gd-a.gd) || (b.gf-a.gf);
   if (base !== 0) return base;
