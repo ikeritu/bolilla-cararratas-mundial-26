@@ -201,3 +201,9 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v22
 - Corregido el artefacto visual de las líneas del knockout en GitHub Pages desactivando el SVG de conexión que se pintaba fuera del cuadro.
 - El bracket mantiene la estructura y avance oficial por IDs de partido; solo se retira el dibujo de líneas hasta implementar una versión SVG 100% encapsulada.
+
+
+## v23
+- Corrección definitiva del artefacto visual de líneas del bracket en GitHub Pages.
+- Además del SVG, se desactivan globalmente los pseudo-elementos `::before` y `::after` heredados de versiones anteriores del knockout.
+- El bracket mantiene el orden funcional oficial, pero sin líneas visuales hasta una futura versión encapsulada.

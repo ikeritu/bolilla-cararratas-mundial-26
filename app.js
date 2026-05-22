@@ -1236,7 +1236,7 @@ function renderBracket(){
   const tree = document.getElementById("knockoutTree");
   if (!tree) return;
   tree.innerHTML = `
-    <div id="bracketArena" class="bracket-arena v22-bracket no-svg-lines">
+    <div id="bracketArena" class="bracket-arena v23-bracket no-svg-lines">
       <div class="bracket-side bracket-left">
         ${renderRoundByIds("r32", BRACKET_VISUAL_LAYOUT.left.r32, false, "left")}
         ${renderRoundByIds("r16", BRACKET_VISUAL_LAYOUT.left.r16, false, "left")}

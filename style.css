@@ -687,3 +687,58 @@ svg.bracket-lines {
   display: none !important;
   content: none !important;
 }
+
+
+/* v23: apagado global y definitivo de cualquier línea antigua del bracket.
+   El problema en GitHub Pages venía de pseudo-elementos heredados ::before/::after
+   de versiones anteriores, no solo del SVG. */
+.bracket-lines,
+#bracketLines,
+svg.bracket-lines {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.bracket-left .bracket-round::before,
+.bracket-left .bracket-round::after,
+.bracket-right .bracket-round::before,
+.bracket-right .bracket-round::after,
+.bracket-center::before,
+.bracket-center::after,
+.bracket-match::before,
+.bracket-match::after,
+.bracket-round::before,
+.bracket-round::after,
+.bracket-side::before,
+.bracket-side::after,
+.bracket-arena::before,
+.bracket-arena::after,
+.bracket-arena-pro::before,
+.bracket-arena-pro::after,
+.v20-bracket::before,
+.v20-bracket::after,
+.v22-bracket::before,
+.v22-bracket::after,
+.v23-bracket::before,
+.v23-bracket::after {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.bracket-arena,
+.bracket-arena-pro,
+.v20-bracket,
+.v22-bracket,
+.v23-bracket {
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
