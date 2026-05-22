@@ -3,7 +3,7 @@ window.APP_CONFIG = {
 
   // 1) Pega aquí la URL del despliegue de Google Apps Script.
   // Ejemplo: "https://script.google.com/macros/s/AKfycbx.../exec"
-  API_URL: "", // Se rellena al crear el despliegue de Google Apps Script (/exec). Sin esto, la web funciona en demo/local pero no guarda en Sheets.
+  API_URL: "https://script.google.com/macros/s/AKfycby96sxrLuyD4g0fz9Iv3C2u1MLUtlK-EjTv4TmAMb-k9wDF6UvtLnvTdv8B6UHbGWc/exec", // Se rellena al crear el despliegue de Google Apps Script (/exec). Sin esto, la web funciona en demo/local pero no guarda en Sheets.
 
   // 2) Clave suave para que la web no se vea si no conoces el parámetro.
   // URL final ejemplo:
