@@ -228,3 +228,9 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v28
 - Corregido el botón “Volver a editar” del modal de revisión final, que quedaba blanco sobre fondo claro y no se veía.
 - Añadido cache-busting nuevo para `style.css` y scripts.
+
+
+## v29
+- Corrección definitiva del botón “Volver a editar” en el modal de revisión.
+- El botón ahora lleva clase propia y estilo inline para evitar conflictos o caché de CSS.
+- Añadido cache-busting nuevo para forzar carga de `app.js` y `style.css`.
