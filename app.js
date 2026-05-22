@@ -1053,7 +1053,7 @@ function renderImpactResult(){
   el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Jugador</th><th>Predicción</th><th>Si acierta exacto</th><th>Si acierta signo</th></tr></thead><tbody>${preds.map(p=>`<tr><td>${escapeHtml(p.avatar)} <strong>${escapeHtml(p.name)}</strong></td><td>${p.sc.home}-${p.sc.away}</td><td>+4</td><td>+2</td></tr>`).join("")}</tbody></table></div><p class="muted">Impacto simple de partido. Las tragedias de campeón muerto se calculan cuando haya resultados reales de eliminatorias.</p>`;
 }
 function randomRatPrediction(){
-  const mode=prompt("Modo rata: conservador, caos o rata", "conservador");
+  const mode=prompt("Modo rata completa v27: conservador, caos o rata", "conservador");
   if(!mode) return;
 
   const isChaos = /caos/i.test(mode);
@@ -1090,7 +1090,7 @@ function randomRatPrediction(){
   renderProgressDashboard();
   renderMySummary();
   saveDraftLocal(true);
-  toast("Rata aleatoria completa activada. Te ha rellenado hasta el último drama; revisa antes de enviar, que luego vienen los lloros.", "warn");
+  toast("Rata aleatoria COMPLETA v27 activada. Si ahora falta algo, ya es sabotaje arbitral.", "warn");
 }
 
 function randomCompleteKnockout(mode="conservador"){
@@ -1108,37 +1108,57 @@ function randomCompleteKnockout(mode="conservador"){
     return Math.random() < 0.78 ? fav : dog;
   };
 
-  const fillNextRound = (fromRound, toRound) => {
-    const fromSlots = window.KNOCKOUT_SLOTS?.[fromRound] || [];
-    const toSlots = window.KNOCKOUT_SLOTS?.[toRound] || [];
-    const source = fromRound === "r32" ? (state.knockout.r32 || []) : (state.knockout[fromRound] || []);
-    state.knockout[toRound] = [];
+  // v27: simulación completa por IDs oficiales de partido.
+  // No depende del render del bracket ni de clicks visuales.
+  const winnersByMatchId = {};
+  const losersByMatchId = {};
 
-    toSlots.forEach((slot, targetMatchIndex) => {
-      (slot.from || []).forEach((sourceMatchId, pos) => {
-        const sourceMatchIndex = fromSlots.findIndex(s => Number(s.id) === Number(sourceMatchId));
-        if(sourceMatchIndex < 0) return;
-        const a = source[sourceMatchIndex*2] || "";
-        const b = source[sourceMatchIndex*2+1] || "";
-        state.knockout[toRound][targetMatchIndex*2 + pos] = pickWinner(a,b);
-      });
+  const r32Slots = window.KNOCKOUT_SLOTS?.r32 || [];
+  state.knockout.r32 = getQualifiedTeams();
+
+  r32Slots.forEach((slot, i) => {
+    const a = state.knockout.r32[i*2] || "";
+    const b = state.knockout.r32[i*2+1] || "";
+    const w = pickWinner(a,b);
+    winnersByMatchId[slot.id] = w;
+    losersByMatchId[slot.id] = w === a ? b : a;
+  });
+
+  const buildRound = (round) => {
+    const slots = window.KNOCKOUT_SLOTS?.[round] || [];
+    state.knockout[round] = [];
+    slots.forEach((slot, matchIndex) => {
+      const teams = (slot.from || []).map(id => winnersByMatchId[id] || "");
+      state.knockout[round][matchIndex*2] = teams[0] || "";
+      state.knockout[round][matchIndex*2+1] = teams[1] || "";
+      const w = pickWinner(teams[0], teams[1]);
+      winnersByMatchId[slot.id] = w;
+      losersByMatchId[slot.id] = w === teams[0] ? teams[1] : teams[0];
     });
   };
 
-  fillNextRound("r32", "r16");
-  fillNextRound("r16", "qf");
-  fillNextRound("qf", "sf");
-  fillNextRound("sf", "final");
+  buildRound("r16");
+  buildRound("qf");
+  buildRound("sf");
+  buildRound("final");
 
-  const finalists = state.knockout.final || [];
-  const champion = pickWinner(finalists[0], finalists[1]);
+  const finalSlot = (window.KNOCKOUT_SLOTS?.final || [])[0];
+  const champion = finalSlot ? winnersByMatchId[finalSlot.id] : "";
   state.knockout.champion = champion ? [champion] : [];
 
-  const semiTeams = (state.knockout.sf || []).filter(Boolean);
-  const finalistSet = new Set(finalists.filter(Boolean));
-  const thirdCandidates = semiTeams.filter(t => !finalistSet.has(t));
+  const sfSlots = window.KNOCKOUT_SLOTS?.sf || [];
+  const thirdCandidates = sfSlots.map(s => losersByMatchId[s.id]).filter(Boolean);
   const third = pickWinner(thirdCandidates[0], thirdCandidates[1]) || thirdCandidates[0] || "";
   state.knockout.third = third ? [third] : [];
+
+  console.log("Rata aleatoria v27 completa", {
+    r16: state.knockout.r16,
+    qf: state.knockout.qf,
+    sf: state.knockout.sf,
+    final: state.knockout.final,
+    champion: state.knockout.champion,
+    third: state.knockout.third
+  });
 }
 
 function globalTeamStrength(team){

@@ -217,3 +217,9 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v26
 - Mejorado el botón de Rata aleatoria: ahora completa fase de grupos, eliminatorias, campeón, tercer puesto, premios y 11 ideal.
 - Añadido cache-busting nuevo para evitar que GitHub Pages cargue `app.js` antiguo.
+
+
+## v27
+- Corregida de raíz la función de Rata aleatoria completa.
+- Ahora las eliminatorias se simulan por IDs oficiales de partido, no por render ni por clicks visuales.
+- El botón se renombra como “Rata aleatoria completa” para confirmar que el navegador carga la versión correcta.
