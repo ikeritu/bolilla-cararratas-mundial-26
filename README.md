@@ -209,6 +209,6 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - El bracket mantiene el orden funcional oficial, pero sin líneas visuales hasta una futura versión encapsulada.
 
 
-## v24
-- Conectado `config.js` con el despliegue real de Google Apps Script.
-- `API_URL` configurada para guardar datos en Google Sheets.
+## v25
+- Configurado `API_URL` con el despliegue real de Google Apps Script.
+- Añadido cache-busting a `config.js`, `app.js`, `admin.js`, `worldcup2026.js` y `style.css` para evitar que GitHub Pages o el navegador carguen versiones antiguas.
