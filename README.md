@@ -4,7 +4,7 @@ Porra privada del Mundial 2026 para jugar con amigos, con fase de grupos, bracke
 
 ## Estado de esta versión
 
-Versión **v20** preparada para revisión local antes de subir a GitHub Pages y conectar Google Sheets.
+Versión **v33** preparada para revisión local antes de subir a GitHub Pages y conectar Google Sheets.
 
 ### Cambios principales v20
 
@@ -244,3 +244,16 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 ## v31
 - Corregido error del panel admin: `escapeAttr is not defined`.
 - Añadida función `escapeAttr()` en `admin.js` y cache-busting nuevo.
+
+
+## v33 - Guardado de borradores incompletos
+
+- El botón principal pasa a llamarse **Guardar avance / porra**.
+- Si faltan datos, la predicción ya no se bloquea: se guarda en Google Sheets como `draft`.
+- Si está completa, se guarda como `complete`.
+- Al volver a entrar con nombre y PIN, el jugador recupera lo que ya había guardado.
+- El estado de la porra diferencia `Pendiente`, `Borrador guardado` y `Completa`.
+- El modal de revisión avisa cuando lo que se va a guardar es un borrador incompleto.
+- El justificante indica si se ha guardado un borrador o una porra completa.
+- Apps Script incluye aviso opcional por email al registrarse un usuario nuevo y no bloquea el alta si falla el envío.
+- Añadido `google-apps-script/appsscript.json` con permisos de Sheets y envío de email.
