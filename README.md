@@ -267,3 +267,11 @@ https://TU_USUARIO.github.io/TU_REPO/?clave=cararratas26
 - El justificante indica si se ha guardado un borrador o una porra completa.
 - Apps Script incluye aviso opcional por email al registrarse un usuario nuevo y no bloquea el alta si falla el envío.
 - Añadido `google-apps-script/appsscript.json` con permisos de Sheets y envío de email.
+
+
+## v37 - Criterios FIFA 2026
+
+- Corregido el orden de desempate de grupos según FIFA 2026: puntos, enfrentamientos directos entre equipos empatados, diferencia de goles total, goles a favor totales y ranking FIFA como fallback.
+- Corregido el desempate de mejores terceros: puntos, diferencia de goles, goles a favor y ranking FIFA como fallback.
+- Limitación documentada: la app no registra tarjetas/fair play, por lo que ese criterio se omite antes del ranking FIFA.
+- Frontend, admin y backend quedan alineados en los mismos criterios.
