@@ -1,10 +1,20 @@
+# Bolilla CaraRatas Mundial 26 — v35 deadline + save fix
+
+Corrección v35:
+
+- Fecha límite de edición actualizada a **11 de junio de 2026 a las 20:30**.
+- Se corrige el guardado de predicciones completas: grupos, dieciseisavos, octavos, cuartos, semifinales, finalistas, campeón, tercer puesto, premios y 11 ideal.
+- El guardado ya no llama a `syncBracketWithGroups()` antes de enviar a Google Sheets, porque esa función puede limpiar rondas posteriores al recalcular el bracket.
+- `collectPrediction()` ahora toma una foto exacta de `state.knockout` y de los campos de premios antes de enviar el JSON.
+- Se mantiene el guardado de borradores incompletos como `draft`.
+
 # Bolilla CaraRatas Mundial 26
 
 Porra privada del Mundial 2026 para jugar con amigos, con fase de grupos, bracket de eliminatorias, premios individuales, 11 ideal, ranking y panel de administrador.
 
 ## Estado de esta versión
 
-Versión **v33** preparada para revisión local antes de subir a GitHub Pages y conectar Google Sheets.
+Versión **v35** preparada para revisión local antes de subir a GitHub Pages y conectar Google Sheets.
 
 ### Cambios principales v20
 
